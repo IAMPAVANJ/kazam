@@ -39,21 +39,11 @@ router.post("/todo/create",async(req:any,res:any)=>{
 
 router.put("/todo/:id",async(req:any,res:any)=>{
     const {id} = req.params;
-    const {title, description, dueDate, status} = req.body;
-
-    console.log(req.body)
-
     const todo = await Todo.find({_id:id,owner:req.user!.id})
     if(!todo){
         return res.status(404).json({message:"Todo Not Found"});
     }
-    if(title !==undefined) todo.title = title;
-    if(description !==undefined) todo.description = description;
-    if(dueDate !==undefined) todo.dueDate = description;
-    if(status !==undefined && ['pending','completed'].includes(status)){
-        todo.status = status;
-    }
-
+    
     const updateTodo = await Todo.findByIdAndUpdate(id,{$set:req.body},{new:true})
     
     return res.json(updateTodo);
