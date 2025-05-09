@@ -8,6 +8,7 @@ const router = express.Router();
 router.use(authenticate);
 
 router.get("/todo",async(req:any,res:any)=>{
+    console.log("I have been hit");
     const {status} = req.query;
     const filter:any = {owner : req.user!.id};
     if(status){
@@ -18,6 +19,36 @@ router.get("/todo",async(req:any,res:any)=>{
 
     res.json(todos)
 })
+
+// router.get("/todo", async (req: any, res: any) => {
+//     const { status, page = 1, limit = 10 } = req.query;
+  
+//     const filter: any = { owner: req.user!.id };
+//     if (status) {
+//       filter.status = status;
+//     }
+  
+//     const pageNumber = parseInt(page as string, 10);
+//     const limitNumber = parseInt(limit as string, 10);
+  
+//     try {
+//       const todos = await Todo.find(filter)
+//         .sort({ dueDate: 1 })
+//         .skip((pageNumber - 1) * limitNumber)
+//         .limit(limitNumber);
+  
+//       const total = await Todo.countDocuments(filter);
+  
+//       res.json({
+//         data: todos,
+//         total,
+//         page: pageNumber,
+//         totalPages: Math.ceil(total / limitNumber),
+//       });
+//     } catch (err) {
+//       res.status(500).json({ message: err.message });
+//     }
+//   });
 
 router.post("/todo/create",async(req:any,res:any)=>{
     const {title, description, status, dueDate} = req.body;
