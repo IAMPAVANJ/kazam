@@ -4,11 +4,13 @@ import usePostApi from "../../Api/usePostApi";
 import { useNavigate } from "react-router-dom";
 import { errorToast, isValidEmail, successToast } from "../../utils/common";
 import useGetApi from "../../Api/useGetApi";
+import SpinnerLoader from "../../components/loader/SpinnerLoader";
 
 const Login = () => {
   const { CloseEye, OpenEye } = Icons;
   const { login, register } = usePostApi();
   const { wakeup } = useGetApi();
+  const [loading,setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
   const [authToggle, setAuthToggle] = useState(false);
   const [form, setForm] = useState({
@@ -30,25 +32,30 @@ const Login = () => {
   }, []);
 
   const userlogin = async () => {
+    setLoading(true);
     await login({
       email: form.email,
       password: form.password,
     })
       .then((res) => {
+        setLoading(false);
         localStorage.setItem("user", JSON.stringify(res?.data));
         localStorage.setItem("token", JSON.stringify(res?.data?.accessToken));
         navigate("/todo");
         successToast("Logged In");
       })
       .catch((err) => {
+        setLoading(false);
         console.log(err);
         errorToast(err?.response?.data?.message);
       });
   };
 
   const userRegister = async () => {
+    setLoading(true);
     await register(form)
       .then((res) => {
+        setLoading(false);
         console.log(res);
         successToast("Registered Successfully");
         setForm({ name: "", email: "", password: "" });
@@ -56,6 +63,7 @@ const Login = () => {
         userlogin();
       })
       .catch((err) => {
+        setLoading(false);
         console.log(err);
         errorToast(err?.response?.data?.message);
       });
@@ -181,7 +189,7 @@ const Login = () => {
               onClick={(e) => handleForm(e)}
               className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
-              {authToggle ? "Register" : "Sign In"}
+              { loading ? <SpinnerLoader/>  : authToggle ? "Register" : "Sign In"}
             </button>
           </div>
         </form>
@@ -192,7 +200,7 @@ const Login = () => {
             onClick={() => setAuthToggle(!authToggle)}
             className="font-semibold text-indigo-600 hover:text-indigo-500 cursor-pointer"
           >
-            {authToggle ? "Sign In" : "Register"}
+            {  authToggle ? "Sign In" : "Register"}
           </span>
         </p>
       </div>

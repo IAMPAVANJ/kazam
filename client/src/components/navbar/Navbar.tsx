@@ -42,10 +42,17 @@ export default function Navbar({setIsOpen}:{
 
   const logoutuser = async(e:React.FormEvent)=>{
     e.preventDefault();
+    localStorage.clear();
+      window.location.href = "/";
     await Logout()
     .then((res)=>{
       console.log(res);
       successToast("Logout Successfully");
+      localStorage.clear();
+      window.location.href = "/";
+    })
+    .catch((err)=>{
+      console.log(err);
       localStorage.clear();
       window.location.href = "/";
     })

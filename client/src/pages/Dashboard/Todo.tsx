@@ -111,11 +111,12 @@ const Todo = () => {
         {loading ? (
           <SkeletonLoader />
         ) : data.length > 0 ? (
-          <DataTable 
+          <DataTable
           data={data} 
           setData={setData}
           setIsEdit={setIsEdit}
           setSelectedTodo={setSelectedTodo}
+          isEdit={isEdit}
           />
         ) : (
           <button
@@ -134,6 +135,7 @@ const Todo = () => {
           createTodo={createNewTodo}
           isEdit={isEdit}
           selectedTodo={selectedTodo}
+          setIsEdit={setIsEdit}
         />
       </div>
     </div>

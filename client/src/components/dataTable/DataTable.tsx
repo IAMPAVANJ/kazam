@@ -2,21 +2,26 @@ import dayjs from "dayjs";
 import type { IToDo } from "../../types/types";
 import Icons from "../../utils/icons";
 import useDeleteApi from "../../Api/useDeleteApi";
+import TodoCard from "../DataCard/TodoCard";
+import { useState } from "react";
 
 const DataTable = ({
   data = [],
   setData,
   setIsEdit,
   setSelectedTodo,
+  isEdit,
 }: {
   data: IToDo[];
   setData: (data: IToDo[] | ((prevData: IToDo[]) => IToDo[])) => void;
   setIsEdit: (arg0: boolean) => void;
   setSelectedTodo: (arg0: IToDo) => void;
+  isEdit:boolean;
 }) => {
   const { WhiteEye, DeleteIcon, EditIcon } = Icons;
   const { DeleteTodo } = useDeleteApi();
-
+  const [isOpen,setIsOpen] = useState<boolean>(false);
+  const [todoData,setTodoData] = useState<IToDo | null>();
   const handleDelete = async (id: string | undefined) => {
     if (id) {
       try {
@@ -63,7 +68,7 @@ const DataTable = ({
             <tbody className="divide-y divide-gray-200">
               {data.map((item: IToDo, index) => {
                 return (
-                  <tr className="*:text-gray-900 *:first:font-medium">
+                  <tr key={index} className="*:text-gray-900 *:first:font-medium">
                     <td className="px-3 py-2 whitespace-nowrap">{index + 1}</td>
                     <td className="px-3 py-2 max-w-[60%]">{item?.title}</td>
                     <td className="px-3 py-2 max-w-[60%]">
@@ -71,13 +76,14 @@ const DataTable = ({
                     </td>
                     <td className="px-3 py-2 max-w-[60%]">{item?.status}</td>
                     <td className="px-3 py-2">
-                      <img src={WhiteEye} className="cursor-pointer size-6" />
+                      <img onClick={()=>{setTodoData(item);setIsOpen(true)}} src={WhiteEye} className="cursor-pointer size-6" />
                     </td>
                     <td className="px-3 py-2">
                       <img
                         onClick={() => {
-                          setIsEdit(true);
+                          setIsEdit(!isEdit);
                           setSelectedTodo(item);
+                          console.log(isEdit)
                         }}
                         src={EditIcon}
                         className="cursor-pointer size-6"
@@ -99,6 +105,7 @@ const DataTable = ({
           </table>
         )}
       </div>
+      <TodoCard isOpen={isOpen} setIsOpen={setIsOpen} data={todoData}/>
     </div>
   );
 };

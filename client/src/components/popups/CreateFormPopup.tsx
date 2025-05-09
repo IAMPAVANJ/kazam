@@ -11,6 +11,7 @@ export default function CreateForm({
   createTodo,
   isEdit,
   selectedTodo,
+  setIsEdit
 }: {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
@@ -19,6 +20,7 @@ export default function CreateForm({
   createTodo:(e:React.FormEvent)=>void;
   isEdit:boolean;
   selectedTodo:IToDo | null;
+  setIsEdit:(isEdit:boolean)=>void
 }) {
   
   useEffect(()=>{
@@ -27,6 +29,8 @@ export default function CreateForm({
     }
   },[])
   function close() {
+    console.log(isEdit)
+    setIsEdit(false);
     setIsOpen(false);
   }
 
